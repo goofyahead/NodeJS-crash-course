@@ -1,10 +1,35 @@
-const http = require('http')
-const port = 8080
+const Hapi = require('hapi')
+const Db = require('./db')
 
-const server = http.createServer((req, res) => {
-	res.end('hello from server')
+const server = Hapi.server({
+	port: 3000,
+	host: 'localhost'
+});
+
+const init = async () => {
+	await server.start()
+	console.log(`Server running at: ${server.info.uri}`)
+};
+
+server.route({
+    method: 'GET',
+    path: '/',
+    handler: (request) => {
+        return 'Hello, world!'
+    }
 })
 
-server.listen(port, () => {
-	console.log(`server running on ${port}`)
+server.route({
+    method: 'GET',
+    path: '/people',
+    handler: (request) => {
+        return Db.getPeople()
+    }
 })
+
+process.on('unhandledRejection', (err) => {
+	console.log(err)
+	process.exit(1)
+})
+
+init()

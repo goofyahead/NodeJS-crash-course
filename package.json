@@ -12,5 +12,9 @@
     "mongodb"
   ],
   "author": "alex",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "hapi": "^17.5.1",
+    "mongodb": "^3.0.10"
+  }
 }
