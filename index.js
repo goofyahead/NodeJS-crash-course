@@ -1,5 +1,8 @@
 const Hapi = require('hapi')
+const Vision = require('vision')
 const Db = require('./db')
+const Handlebars = require('handlebars')
+
 
 const server = Hapi.server({
 	port: 3000,
@@ -7,8 +10,17 @@ const server = Hapi.server({
 });
 
 const init = async () => {
-	await server.start()
-	console.log(`Server running at: ${server.info.uri}`)
+    await server.register(Vision);
+
+    server.views({
+        engines: { html: Handlebars },
+        relativeTo: __dirname,
+        path: `templates`
+    });
+
+    await server.start();
+    console.log('Server is running at ' + server.info.uri);
+
 };
 
 server.route({
@@ -24,6 +36,27 @@ server.route({
     path: '/people',
     handler: (request) => {
         return Db.getPeople()
+    }
+})
+
+server.route({
+    method: 'GET',
+    path: '/people/{name}',
+    handler: (request) => {
+        return Db.getPerson(request.params.name)
+    }
+})
+
+server.route({
+    method: 'GET',
+    path: '/render/people/{name}',
+    handler: async (request, h) => {
+        const person = await Db.getPerson(request.params.name)
+
+        return h.view('person', {
+            message: 'Hello Handlebars!',
+            person: person
+        });
     }
 })
 

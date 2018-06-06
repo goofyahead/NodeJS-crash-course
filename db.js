@@ -17,15 +17,32 @@ class DbService {
 	}
 
 	async getPeople(){
-		return await this.query('people', {})
+		return await this.queryMany('people', {})
 	}
 
-	async query(collectionName, whereClause) {
+	async getPerson(givenName){
+		console.log('name', givenName)
+		return await this.queryOne('people', {name: givenName})
+	}
+
+	async queryOne(collectionName, whereClause) {
+		const collection = this.db.collection(collectionName)
+		// Find some documents
+		return new Promise( (resolve, reject) => {
+			collection.findOne(whereClause, (err, result) => {
+				console.log("Found the following records")
+				console.log(result)
+				resolve(result)
+			})
+		})
+	}
+
+	async queryMany(collectionName, whereClause) {
 		const collection = this.db.collection(collectionName)
 		// Find some documents
 		return new Promise( (resolve, reject) => {
 			collection.find(whereClause).toArray(function(err, docs) {
-				console.log("Found the following records")
+				console.log("Found the following record")
 				console.log(docs)
 				resolve(docs)
 			})
