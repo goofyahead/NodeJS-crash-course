@@ -23,12 +23,7 @@ server.route({
     method: 'GET',
     path: '/people',
     handler: (request) => {
-        return new Promise(function (resolve, reject) {
-            Db.getPeople((people) => {
-                console.log(people)
-                resolve(people)
-            })
-        })
+        return Db.getPeople()
     }
 })
 

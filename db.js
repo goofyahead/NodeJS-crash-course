@@ -16,13 +16,19 @@ class DbService {
 		});
 	}
 
-	getPeople(callback){
-		const collection = this.db.collection('people')
+	async getPeople(){
+		return await this.query('people', {})
+	}
+
+	async query(collectionName, whereClause) {
+		const collection = this.db.collection(collectionName)
 		// Find some documents
-		collection.find({}).toArray(function(err, docs) {
-			console.log("Found the following records")
-			console.log(docs)
-			callback(docs)
+		return new Promise( (resolve, reject) => {
+			collection.find(whereClause).toArray(function(err, docs) {
+				console.log("Found the following records")
+				console.log(docs)
+				resolve(docs)
+			})
 		})
 	}
 }
