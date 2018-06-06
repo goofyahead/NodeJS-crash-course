@@ -1,10 +1,16 @@
 <html>
-    <body>
-        <div>
-        	{{message}}
-            <h1>{{person.name}}</h1>
-            <div>{{person.skills}}</div>
-            <img src='{{person.picture}}'/>
-        </div>
-    </body>
+<head title='{{message}}'>
+	<body>
+		<div>
+			<h1>{{person.name}}</h1>
+			<ul>
+			{{#each person.skills}}
+				<li>
+					{{this}}
+				</li>
+			{{/each}}
+			</ul>
+			<img src='{{person.picture}}'/>
+		</div>
+	</body>
 </html>
