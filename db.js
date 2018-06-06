@@ -1,21 +1,30 @@
-const MongoClient = require('mongodb').MongoClient;
+const {MongoClient} = require('mongodb');
 
 // Connection URL
 const url = 'mongodb://localhost:27017';
 // Database Name
 const dbName = 'myDb';
 
-class Db {
+class DbService {
+
 	constructor (){
+		this.db = null
+		const self = this
 		MongoClient.connect(url, function(err, client) {
 			console.log("Connected successfully to server");
-			const db = client.db(dbName);
+			self.db = client.db(dbName);
 		});
 	}
 
-	getPeople(){
-		return 'people!'
+	getPeople(callback){
+		const collection = this.db.collection('people')
+		// Find some documents
+		collection.find({}).toArray(function(err, docs) {
+			console.log("Found the following records")
+			console.log(docs)
+			callback(docs)
+		})
 	}
 }
 
-module.exports = new Db()
+module.exports = new DbService()
